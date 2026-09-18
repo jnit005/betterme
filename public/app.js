@@ -1,3 +1,13 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
 const screens = {
   auth: document.getElementById("authScreen"),
   landing: document.getElementById("landing"),
@@ -40,8 +50,8 @@ function showScreen(name) {
 
 function setAuthMessage(message, isError = true) {
   authMessage.textContent = message;
-  authMessage.classList.toggle("error", isError);
-  authMessage.classList.toggle("success", !isError);
+  authMessage.classList.toggle("error", isError && !!message);
+  authMessage.classList.toggle("success", !isError && !!message);
 }
 
 function setAuthMode(mode) {
@@ -59,123 +69,125 @@ function setAuthMode(mode) {
   setAuthMessage("");
 }
 
-authSwitch.addEventListener("click", () => {
-  setAuthMode(authMode === "signin" ? "signup" : "signin");
-});
-
-authForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const email = authEmail.value.trim();
-  const password = authPassword.value;
-
-  if (!email || password.length < 6) {
-    setAuthMessage("Enter a valid email and a password of at least 6 characters.");
-    return;
-  }
-
-  authSubmit.disabled = true;
-  authSubmit.textContent = authMode === "signin" ? "Signing in..." : "Creating account...";
-  setAuthMessage("");
-
-  try {
-    if (authMode === "signin") {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-    } else {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-    }
-    authForm.reset();
-  } catch (error) {
-    const messages = {
-      "auth/invalid-credential": "Email or password is incorrect.",
-      "auth/user-not-found": "No account was found with this email.",
-      "auth/wrong-password": "Email or password is incorrect.",
-      "auth/email-already-in-use": "An account already exists with this email.",
-      "auth/invalid-email": "Please enter a valid email address.",
-      "auth/weak-password": "Password must be at least 6 characters.",
-      "auth/too-many-requests": "Too many attempts. Please try again later."
-    };
-    setAuthMessage(messages[error.code] || "Authentication failed. Please try again.");
-  } finally {
-    authSubmit.disabled = false;
-    authSubmit.innerHTML = authMode === "signin" ? "Sign in <span>→</span>" : "Create account <span>→</span>";
-  }
-});
-
-forgotPassword.addEventListener("click", async () => {
-  const email = authEmail.value.trim();
-  if (!email) {
-    setAuthMessage("Enter your email address first, then click Forgot password.");
-    authEmail.focus();
-    return;
-  }
-  try {
-    await firebase.auth().sendPasswordResetEmail(email);
-    setAuthMessage("Password reset email sent. Check your inbox.", false);
-  } catch (error) {
-    setAuthMessage(error.code === "auth/user-not-found"
-      ? "No account was found with this email."
-      : "We could not send the reset email. Please check the email address and try again.");
-  }
-});
-
-logoutBtn.addEventListener("click", async () => {
-  await firebase.auth().signOut();
-});
-
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    userEmail.textContent = user.email || "Signed in";
-    accountControls.classList.remove("hidden");
-    showScreen("landing");
-  } else {
-    accountControls.classList.add("hidden");
-    showScreen("auth");
-  }
-});
-
-document.getElementById("startSetup").addEventListener("click", () => {
-  showScreen("setup");
-});
-
-document.getElementById("setupForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  interviewProfile = {
-    role: document.getElementById("role").value.trim(),
-    domain: document.getElementById("domain").value.trim(),
-    experience: document.getElementById("experience").value,
-    difficulty: document.getElementById("difficulty").value
+function friendlyAuthError(error) {
+  const messages = {
+    "auth/invalid-credential": "Email or password is incorrect.",
+    "auth/user-not-found": "No account was found with this email.",
+    "auth/wrong-password": "Email or password is incorrect.",
+    "auth/email-already-in-use": "An account already exists with this email.",
+    "auth/invalid-email": "Please enter a valid email address.",
+    "auth/weak-password": "Password must be at least 6 characters.",
+    "auth/too-many-requests": "Too many attempts. Please try again later."
   };
-  currentQuestion = 0;
-  renderQuestion();
-  showScreen("interview");
-});
+  return messages[error.code] || error.message || "Authentication failed. Please try again.";
+}
+
+async function start() {
+  const response = await fetch("firebase-config.json", { cache: "no-store" });
+  if (!response.ok) throw new Error(`Could not load Firebase configuration (${response.status}).`);
+  const firebaseConfig = await response.json();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  authSwitch.addEventListener("click", () => setAuthMode(authMode === "signin" ? "signup" : "signin"));
+
+  authForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const email = authEmail.value.trim();
+    const password = authPassword.value;
+    if (!email || password.length < 6) {
+      setAuthMessage("Enter a valid email and a password of at least 6 characters.");
+      return;
+    }
+    authSubmit.disabled = true;
+    authSubmit.textContent = authMode === "signin" ? "Signing in..." : "Creating account...";
+    setAuthMessage("");
+    try {
+      if (authMode === "signin") {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+      authForm.reset();
+    } catch (error) {
+      setAuthMessage(friendlyAuthError(error));
+    } finally {
+      authSubmit.disabled = false;
+      authSubmit.innerHTML = authMode === "signin" ? "Sign in <span>→</span>" : "Create account <span>→</span>";
+    }
+  });
+
+  forgotPassword.addEventListener("click", async () => {
+    const email = authEmail.value.trim();
+    if (!email) {
+      setAuthMessage("Enter your email address first, then click Forgot password.");
+      authEmail.focus();
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setAuthMessage("Password reset email sent. Check your inbox.", false);
+    } catch (error) {
+      setAuthMessage(friendlyAuthError(error));
+    }
+  });
+
+  logoutBtn.addEventListener("click", () => signOut(auth));
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      userEmail.textContent = user.email || "Signed in";
+      accountControls.classList.remove("hidden");
+      showScreen("landing");
+    } else {
+      accountControls.classList.add("hidden");
+      showScreen("auth");
+    }
+  });
+
+  document.getElementById("startSetup").addEventListener("click", () => showScreen("setup"));
+  document.getElementById("setupForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    interviewProfile = {
+      role: document.getElementById("role").value.trim(),
+      domain: document.getElementById("domain").value.trim(),
+      experience: document.getElementById("experience").value,
+      difficulty: document.getElementById("difficulty").value
+    };
+    currentQuestion = 0;
+    renderQuestion();
+    showScreen("interview");
+  });
+
+  document.getElementById("nextQuestion").addEventListener("click", () => {
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      renderQuestion();
+    } else showScreen("complete");
+  });
+
+  document.getElementById("exitInterview").addEventListener("click", () => {
+    if (window.confirm("Exit this interview? Your current practice session will not be saved yet.")) showScreen("setup");
+  });
+
+  document.getElementById("newInterview").addEventListener("click", () => {
+    document.getElementById("setupForm").reset();
+    showScreen("setup");
+  });
+
+  setAuthMode("signin");
+}
 
 function renderQuestion() {
   const number = currentQuestion + 1;
-  const total = questions.length;
-  document.getElementById("questionNumber").textContent = `Question ${number} of ${total}`;
-  document.getElementById("progressFill").style.width = `${(number / total) * 100}%`;
+  document.getElementById("questionNumber").textContent = `Question ${number} of ${questions.length}`;
+  document.getElementById("progressFill").style.width = `${(number / questions.length) * 100}%`;
   document.getElementById("questionText").textContent = questions[currentQuestion];
   document.getElementById("recordStatus").textContent = "Ready for your answer";
   document.getElementById("timer").textContent = "00:00";
 }
 
-document.getElementById("nextQuestion").addEventListener("click", () => {
-  if (currentQuestion < questions.length - 1) {
-    currentQuestion++;
-    renderQuestion();
-  } else {
-    showScreen("complete");
-  }
-});
-
-document.getElementById("exitInterview").addEventListener("click", () => {
-  if (window.confirm("Exit this interview? Your current practice session will not be saved yet.")) {
-    showScreen("setup");
-  }
-});
-
-document.getElementById("newInterview").addEventListener("click", () => {
-  document.getElementById("setupForm").reset();
-  showScreen("setup");
+start().catch(error => {
+  console.error(error);
+  setAuthMessage("BetterMe could not initialize authentication. Please refresh and try again.");
 });
