@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BetterMe AI Interviewer — practice behavioral interviews with personalized questions.">
+  <title>BetterMe AI Interviewer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="logo" href="#" aria-label="BetterMe home">
+        <span class="logo-mark">B</span>
+        <span>better<span>me</span></span>
+      </a>
+      <div class="topbar-label">AI INTERVIEWER</div>
+    </header>
+
+    <main>
+      <section id="landing" class="screen landing-screen">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">INTERVIEW PRACTICE, REIMAGINED</div>
+            <h1>Meet your<br><em>AI interviewer.</em></h1>
+            <p>
+              Practice realistic behavioral interviews tailored to your experience,
+              role and difficulty level.
+            </p>
+            <button id="startSetup" class="btn btn-primary">
+              Start a free interview <span>→</span>
+            </button>
+            <div class="trust-row">
+              <span>5 questions</span>
+              <span>•</span>
+              <span>Voice-ready</span>
+              <span>•</span>
+              <span>Personalized</span>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="avatar-glow"></div>
+            <div class="avatar-placeholder" aria-label="AI interviewer preview">
+              <div class="avatar-head">
+                <div class="hair"></div>
+                <div class="face">
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="brow brow-left"></div>
+                  <div class="brow brow-right"></div>
+                  <div class="nose"></div>
+                  <div class="mouth"></div>
+                </div>
+              </div>
+              <div class="avatar-shoulders"></div>
+            </div>
+            <div class="avatar-caption">
+              <span class="status-dot"></span>
+              Your AI interviewer
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="setup" class="screen setup-screen hidden">
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">BEHAVIORAL INTERVIEW</div>
+            <h2>Tell us about the interview you want to practice.</h2>
+            <p>We'll use these details to personalize your questions.</p>
+          </div>
+          <div class="plan-chip">FREE · 5 QUESTIONS</div>
+        </div>
+
+        <form id="setupForm" class="setup-card">
+          <div class="form-grid">
+            <label class="field">
+              <span>Target role</span>
+              <input id="role" name="role" type="text" placeholder="e.g. Sales Engineer" required>
+            </label>
+
+            <label class="field">
+              <span>Domain / area</span>
+              <input id="domain" name="domain" type="text" placeholder="e.g. Cybersecurity" required>
+            </label>
+
+            <label class="field">
+              <span>Years of experience</span>
+              <select id="experience" name="experience" required>
+                <option value="">Select experience</option>
+                <option>0–2 years</option>
+                <option>3–5 years</option>
+                <option>6–10 years</option>
+                <option>10+ years</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Interview difficulty</span>
+              <select id="difficulty" name="difficulty" required>
+                <option value="">Select difficulty</option>
+                <option>Easy</option>
+                <option selected>Medium</option>
+                <option>Hard</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="setup-footer">
+            <div class="privacy-note">
+              <span>🔒</span>
+              Your interview information will be used to personalize this session.
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Continue to interview <span>→</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="interview" class="screen interview-screen hidden">
+        <div class="interview-header">
+          <div>
+            <div class="eyebrow">BEHAVIORAL INTERVIEW</div>
+            <h2 id="questionNumber">Question 1 of 5</h2>
+          </div>
+          <button id="exitInterview" class="text-btn">Exit</button>
+        </div>
+
+        <div class="progress">
+          <div id="progressFill"></div>
+        </div>
+
+        <div class="interview-layout">
+          <div class="interviewer-panel">
+            <div class="interviewer-avatar">
+              <div class="mini-head">
+                <div class="mini-hair"></div>
+                <div class="mini-face">
+                  <div class="mini-eye left"></div>
+                  <div class="mini-eye right"></div>
+                  <div class="mini-mouth"></div>
+                </div>
+              </div>
+            </div>
+            <div class="interviewer-status">
+              <span class="status-dot"></span>
+              AI Interviewer
+            </div>
+          </div>
+
+          <div class="question-panel">
+            <div class="question-label">INTERVIEWER ASKS</div>
+            <div id="questionText" class="question-text"></div>
+
+            <div class="answer-box">
+              <div class="answer-status">
+                <span id="recordStatus">Ready for your answer</span>
+                <span id="timer">00:00</span>
+              </div>
+              <div class="answer-placeholder">
+                <div class="mic-circle">🎙</div>
+                <p>Voice recording will be connected in the next step.</p>
+              </div>
+              <button id="nextQuestion" class="btn btn-primary">Continue <span>→</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="complete" class="screen complete-screen hidden">
+        <div class="complete-card">
+          <div class="success-icon">✓</div>
+          <div class="eyebrow">SESSION COMPLETE</div>
+          <h2>Your practice interview is complete.</h2>
+          <p>The scorecard and AI feedback will be connected in the next development step.</p>
+          <button id="newInterview" class="btn btn-primary">Start another interview <span>→</span></button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
