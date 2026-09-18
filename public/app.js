@@ -27,6 +27,7 @@ const questions = [
 let currentQuestion = 0;
 let interviewProfile = {};
 let authMode = "signin";
+let auth;
 
 const authForm = document.getElementById("authForm");
 const authEmail = document.getElementById("authEmail");
@@ -77,31 +78,42 @@ function friendlyAuthError(error) {
     "auth/email-already-in-use": "An account already exists with this email.",
     "auth/invalid-email": "Please enter a valid email address.",
     "auth/weak-password": "Password must be at least 6 characters.",
-    "auth/too-many-requests": "Too many attempts. Please try again later."
+    "auth/too-many-requests": "Too many attempts. Please try again later.",
+    "auth/network-request-failed": "Network error. Please check your internet connection and try again."
   };
   return messages[error.code] || error.message || "Authentication failed. Please try again.";
 }
 
 async function start() {
-  const response = await fetch("firebase-config.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`Could not load Firebase configuration (${response.status}).`);
+  // Firebase Hosting provides this config automatically for the active project.
+  // This avoids storing Firebase configuration in the source files.
+  const response = await fetch("/__/firebase/init.json", { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Firebase Hosting configuration could not be loaded (${response.status}).`);
+  }
+
   const firebaseConfig = await response.json();
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  auth = getAuth(app);
 
-  authSwitch.addEventListener("click", () => setAuthMode(authMode === "signin" ? "signup" : "signin"));
+  authSwitch.addEventListener("click", () => {
+    setAuthMode(authMode === "signin" ? "signup" : "signin");
+  });
 
   authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const email = authEmail.value.trim();
     const password = authPassword.value;
+
     if (!email || password.length < 6) {
       setAuthMessage("Enter a valid email and a password of at least 6 characters.");
       return;
     }
+
     authSubmit.disabled = true;
     authSubmit.textContent = authMode === "signin" ? "Signing in..." : "Creating account...";
     setAuthMessage("");
+
     try {
       if (authMode === "signin") {
         await signInWithEmailAndPassword(auth, email, password);
@@ -110,6 +122,7 @@ async function start() {
       }
       authForm.reset();
     } catch (error) {
+      console.error("Firebase Authentication error:", error);
       setAuthMessage(friendlyAuthError(error));
     } finally {
       authSubmit.disabled = false;
@@ -124,15 +137,19 @@ async function start() {
       authEmail.focus();
       return;
     }
+
     try {
       await sendPasswordResetEmail(auth, email);
       setAuthMessage("Password reset email sent. Check your inbox.", false);
     } catch (error) {
+      console.error("Firebase password reset error:", error);
       setAuthMessage(friendlyAuthError(error));
     }
   });
 
-  logoutBtn.addEventListener("click", () => signOut(auth));
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+  });
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -146,6 +163,7 @@ async function start() {
   });
 
   document.getElementById("startSetup").addEventListener("click", () => showScreen("setup"));
+
   document.getElementById("setupForm").addEventListener("submit", (event) => {
     event.preventDefault();
     interviewProfile = {
@@ -163,11 +181,15 @@ async function start() {
     if (currentQuestion < questions.length - 1) {
       currentQuestion++;
       renderQuestion();
-    } else showScreen("complete");
+    } else {
+      showScreen("complete");
+    }
   });
 
   document.getElementById("exitInterview").addEventListener("click", () => {
-    if (window.confirm("Exit this interview? Your current practice session will not be saved yet.")) showScreen("setup");
+    if (window.confirm("Exit this interview? Your current practice session will not be saved yet.")) {
+      showScreen("setup");
+    }
   });
 
   document.getElementById("newInterview").addEventListener("click", () => {
@@ -188,6 +210,6 @@ function renderQuestion() {
 }
 
 start().catch(error => {
-  console.error(error);
-  setAuthMessage("BetterMe could not initialize authentication. Please refresh and try again.");
+  console.error("BetterMe initialization error:", error);
+  setAuthMessage("BetterMe could not initialize. Please refresh the page.");
 });
