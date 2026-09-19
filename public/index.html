@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BetterMe AI Interviewer — practice behavioral interviews with personalized questions.">
+  <meta name="description" content="BetterMe helps students and professionals practise before real interviews, build confidence, and prepare for their dream jobs.">
   <title>BetterMe AI Interviewer</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="auth.css">
@@ -19,6 +19,7 @@
       <nav class="main-nav" aria-label="Main navigation">
         <button type="button" class="nav-link active" data-view="landing">Home</button>
         <button type="button" class="nav-link" data-view="categories">Interview</button>
+        <button type="button" class="nav-link" data-view="faq">FAQ</button>
         <button type="button" class="nav-link" data-view="contact">Contact Us</button>
       </nav>
       <div class="topbar-right">
@@ -33,6 +34,19 @@
     </header>
 
     <main>
+      <section id="faq" class="screen faq-screen hidden">
+        <div class="page-heading"><div class="eyebrow">HELP CENTRE</div><h1>Frequently asked questions</h1><p>What to know before you begin practising with BetterMe.</p></div>
+        <div class="faq-list">
+          <details><summary>What is BetterMe?</summary><p>BetterMe is an interview-practice platform designed to help students and professionals rehearse before real interviews, reflect on their answers, and build confidence through practice.</p></details>
+          <details><summary>Who can use BetterMe?</summary><p>Students, job seekers, career changers, and working professionals can explore the Engineering, Sales &amp; Marketing, and Government Exam pathways.</p></details>
+          <details><summary>Is the first interview session free?</summary><p>Yes. Your first practice session is free and includes up to five questions.</p></details>
+          <details><summary>Do I need an account to explore?</summary><p>No. You can browse the platform and pathways without signing in. You’ll be asked to sign in or create an account when you launch an interview.</p></details>
+          <details><summary>How does a practice session work?</summary><p>Choose a pathway, complete the setup form, and start a question-based practice session. At this stage, answers are not recorded: voice recording, automated evaluation, and downloadable reports are planned for later development.</p></details>
+          <details><summary>Will BetterMe guarantee that I get a job?</summary><p>No platform can guarantee a job offer. BetterMe is intended to give you a place to prepare and practise before an actual interview.</p></details>
+          <details><summary>Can I use BetterMe on my phone?</summary><p>The site is designed to adapt to smaller screens. For the most comfortable practice experience, use a modern browser and a stable connection.</p></details>
+        </div>
+      </section>
+
       <section id="contact" class="screen contact-screen hidden">
         <div class="contact-shell">
           <div class="eyebrow">CONTACT BETTERME</div>
@@ -89,13 +103,14 @@
       <section id="landing" class="screen landing-screen">
         <div class="home-hero">
           <div class="hero-copy">
-            <div class="eyebrow"><span class="eyebrow-dot"></span> AI-POWERED INTERVIEW PRACTICE</div>
-            <h1>Your next interview<br>starts <em>with BetterMe.</em></h1>
-            <p class="hero-lead">Build the confidence to show what you know. Practise interview questions, strengthen your answers, and prepare for the opportunities ahead—in your own time, at your own pace.</p>
-            <div class="hero-actions"><button id="startSetup" class="btn btn-primary">Start practising <span>→</span></button><span class="hero-note">Choose a pathway. Get started when you’re ready.</span></div>
-            <div class="hero-proof"><span>For students and professionals</span><i></i><span>Engineering · Sales · Government exams</span></div>
+            <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR PRACTICE GROUND BEFORE THE REAL THING</div>
+            <h1>Your dream job<br>deserves <em>your best preparation.</em></h1>
+            <p class="hero-lead">The interview is your moment to shine. BetterMe gives you a place to rehearse before that moment arrives—so you can organise your thoughts, practise expressing your strengths, and walk into the real conversation feeling more prepared.</p>
+            <div class="hero-actions"><button id="startSetup" class="btn btn-primary">Start practising <span>→</span></button><span class="hero-note"><strong>First practice session FREE</strong> · 5 questions · No payment to begin</span></div>
+            <div class="hero-proof"><span>A practice space for students &amp; professionals</span><i></i><span>Engineering · Sales &amp; Marketing · Government exams</span></div>
           </div>
-          <div class="hero-visual" aria-label="Illustration of an interview practice dashboard">
+          <div class="hero-visual" aria-label="Career preparation visual">
+            <div class="hero-photo-wrap"><img class="hero-photo" src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Professionals collaborating around a table" loading="lazy"><div class="photo-caption"><span class="photo-spark">✦</span><div><strong>Prepare before the big moment</strong><small>Practise in your own space, at your own pace.</small></div></div></div>
             <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
             <div class="visual-glow"></div>
             <div class="practice-card">
@@ -109,22 +124,28 @@
             <div class="float-tag tag-bottom"><span class="tag-check">✓</span> Build interview confidence</div>
           </div>
         </div>
-        <div class="pathway-intro"><div><div class="eyebrow">MADE FOR YOUR NEXT STEP</div><h2>One goal. A practice path that fits.</h2><p>Whether you’re preparing for your first opportunity or your next career move, start with the interview pathway that matches your goal.</p></div></div>
+        <div class="pathway-intro"><div><div class="eyebrow">MADE FOR YOUR NEXT STEP</div><h2>Your goals. Your pathway. Your practice.</h2><p>Each pathway gives you a clear starting point and setup tailored to the kind of opportunity you’re preparing for. Choose one to see the details and begin your session.</p></div></div>
         <div class="home-pathways">
-          <article class="home-pathway"><div class="home-pathway-icon engineering-icon">⌘</div><span>PATHWAY 01</span><h3>Engineering</h3><p>Prepare for technical and engineering interviews with a focus on your role and experience.</p><button type="button" data-pathway="engineering" class="pathway-cta">Explore pathway <b>↗</b></button></article>
-          <article class="home-pathway"><div class="home-pathway-icon sales-icon">↗</div><span>PATHWAY 02</span><h3>Sales &amp; Marketing</h3><p>Practise communicating value, handling scenarios, and sharing your commercial impact.</p><button type="button" data-pathway="sales" class="pathway-cta">Explore pathway <b>↗</b></button></article>
-          <article class="home-pathway"><div class="home-pathway-icon government-icon">▤</div><span>PATHWAY 03</span><h3>Government Exam</h3><p>Prepare for interview stages with structured practice built around your exam pathway.</p><button type="button" data-pathway="government" class="pathway-cta">Explore pathway <b>↗</b></button></article>
+          <article class="home-pathway"><div class="home-pathway-icon engineering-icon">⌘</div><span>PATHWAY 01</span><h3>Engineering</h3><p>Select your engineering role and experience level in the setup. Use the session to practise explaining your thinking, approach, and professional experience.</p><button type="button" data-pathway="engineering" class="pathway-cta">Explore pathway <b>↗</b></button></article>
+          <article class="home-pathway"><div class="home-pathway-icon sales-icon">↗</div><span>PATHWAY 02</span><h3>Sales &amp; Marketing</h3><p>Set up practice for customer-facing and commercial roles. Rehearse how you communicate value, respond to scenarios, and describe outcomes.</p><button type="button" data-pathway="sales" class="pathway-cta">Explore pathway <b>↗</b></button></article>
+          <article class="home-pathway"><div class="home-pathway-icon government-icon">▤</div><span>PATHWAY 03</span><h3>Government Exam</h3><p>Choose your exam and relevant background in the setup. Practise presenting your knowledge, motivation, and perspective clearly.</p><button type="button" data-pathway="government" class="pathway-cta">Explore pathway <b>↗</b></button></article>
         </div>
-        <div class="home-how"><div class="how-heading"><div class="eyebrow">YOUR PRACTICE, YOUR PACE</div><h2>Make every practice count.</h2><p>A simple place to prepare, work on your answers, and keep moving forward.</p></div><div class="how-steps"><div><b>01</b><strong>Choose your pathway</strong><p>Tell BetterMe what kind of interview you’re preparing for.</p></div><div><b>02</b><strong>Start your practice</strong><p>Work through interview questions in a focused practice session.</p></div><div><b>03</b><strong>Keep getting better</strong><p>Use practice as a chance to reflect, refine, and build confidence.</p></div></div></div>
-        <div class="home-bottom-cta"><div><span class="eyebrow">THE NEXT STEP IS YOURS</span><h2>Give yourself room to get ready.</h2><p>Start practising today. You can explore BetterMe before creating an account.</p></div><button id="homeBottomStart" class="btn btn-primary">Choose your pathway <span>→</span></button></div>
-        <footer class="home-footer"><span>betterme</span><span>Practice with purpose. Prepare for what’s next.</span></footer>
+        <div class="home-how"><div class="how-heading"><div class="eyebrow">YOUR PRACTICE, YOUR PACE</div><h2>A practical way to prepare for the real conversation.</h2><p>No pressure to get every answer perfect on the first try. Use practice to notice what you want to improve and prepare deliberately.</p></div><div class="how-steps"><div><b>01</b><strong>Choose your pathway</strong><p>Choose Engineering, Sales &amp; Marketing, or Government Exam, then provide the relevant role or exam details.</p></div><div><b>02</b><strong>Start your practice</strong><p>Move through up to five questions in the free session. Take your time to consider how you would answer each one.</p></div><div><b>03</b><strong>Keep getting better</strong><p>Identify what you want to communicate more clearly and keep practising ahead of the real interview.</p></div></div></div>
+        <section class="free-session-band"><div class="free-badge">FREE TO START</div><div><span class="eyebrow">YOUR FIRST SESSION IS ON US</span><h2>Try your first interview practice free.</h2><p>Start with <strong>5 questions</strong> and get familiar with the practice experience—no payment needed to begin.</p></div><button type="button" class="btn btn-primary" data-view="categories">Start my free session <span>→</span></button></section>
+        <section class="testimonials-section"><div class="testimonials-heading"><div class="eyebrow">PRACTICE THAT MOVES YOU FORWARD</div><h2>Every confident answer starts somewhere.</h2><p>Example testimonial cards are shown below as layout placeholders. Replace these with genuine, permissioned user feedback before publishing.</p></div><div class="testimonial-grid">
+          <article class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><blockquote>“[Placeholder review] I used practice sessions to organise my thoughts and feel more prepared for interview day.”</blockquote><div class="reviewer"><span class="reviewer-avatar">P</span><div><strong>[Name Placeholder]</strong><small>Student · [Institution]</small></div></div></article>
+          <article class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><blockquote>“[Placeholder review] Having a place to rehearse helped me spot where I could make my answers clearer.”</blockquote><div class="reviewer"><span class="reviewer-avatar">A</span><div><strong>[Name Placeholder]</strong><small>Early-career professional</small></div></div></article>
+          <article class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><blockquote>“[Placeholder review] The chance to practise before the real conversation made preparation feel more manageable.”</blockquote><div class="reviewer"><span class="reviewer-avatar">R</span><div><strong>[Name Placeholder]</strong><small>Career switcher</small></div></div></article>
+        </div></section>
+        <div class="home-bottom-cta"><div><span class="eyebrow">THE NEXT STEP IS YOURS</span><h2>Prepare with intention. Show up ready to share your story.</h2><p>Your first five-question practice session is free. Explore first, then sign in when you’re ready to launch.</p></div><button id="homeBottomStart" class="btn btn-primary">Choose your pathway <span>→</span></button></div>
+        <footer class="home-footer"><div class="footer-brand"><strong>betterme</strong><span>Practice today. Prepare for opportunity.</span><small>For students and professionals · Engineering · Sales &amp; Marketing · Government exams</small></div><div class="footer-links"><strong>EXPLORE</strong><button type="button" data-view="landing">Home</button><button type="button" data-view="categories">Interview pathways</button><button type="button" data-view="faq">FAQ</button><button type="button" data-view="contact">Contact us</button></div><div class="footer-links"><strong>GET STARTED</strong><button type="button" data-view="categories">Try your free session</button><span>First session · 5 questions</span></div><div class="footer-legal">© BetterMe · Interview practice platform</div></footer>
       </section>
       <section id="categories" class="screen categories-screen hidden">
-        <div class="section-header"><div><div class="eyebrow">CHOOSE YOUR PATHWAY</div><h2>What are you preparing for?</h2><p>Select a pathway to see its dedicated interview setup.</p></div><div class="plan-chip">FREE · 5 QUESTIONS</div></div>
+        <div class="section-header"><div><div class="eyebrow">CHOOSE YOUR PATHWAY</div><h2>What are you preparing for?</h2><p>Choose the kind of opportunity you are working toward. Each pathway opens a setup form so you can add the role or exam context before starting your practice. Your first session is free and includes up to five questions.</p></div><div class="plan-chip">FREE · 5 QUESTIONS</div></div>
         <div class="pathway-grid">
-          <button type="button" class="pathway-card" data-pathway="engineering"><span class="pathway-icon">⌘</span><span class="pathway-kicker">CAREER PATHWAY 01</span><strong>Engineering</strong><span>Technical and engineering role interview practice, tailored to your discipline and experience.</span><b>Choose Engineering →</b></button>
-          <button type="button" class="pathway-card" data-pathway="sales"><span class="pathway-icon">↗</span><span class="pathway-kicker">CAREER PATHWAY 02</span><strong>Sales &amp; Marketing</strong><span>Practise customer, commercial, communication and go-to-market interview scenarios.</span><b>Choose Sales &amp; Marketing →</b></button>
-          <button type="button" class="pathway-card" data-pathway="government"><span class="pathway-icon">▤</span><span class="pathway-kicker">EXAM PATHWAY 03</span><strong>Government Exam</strong><span>Prepare for government examination interviews and related selection stages.</span><b>Choose Government Exam →</b></button>
+          <button type="button" class="pathway-card" data-pathway="engineering"><span class="pathway-icon">⌘</span><span class="pathway-kicker">CAREER PATHWAY 01</span><strong>Engineering</strong><span>For aspiring and working engineers. Choose your engineering discipline and experience level, then practise explaining your decisions, problem-solving approach, and work clearly.</span><b>Choose Engineering →</b></button>
+          <button type="button" class="pathway-card" data-pathway="sales"><span class="pathway-icon">↗</span><span class="pathway-kicker">CAREER PATHWAY 02</span><strong>Sales &amp; Marketing</strong><span>For sales, marketing, and customer-facing careers. Set your target role and background, then prepare to communicate customer value, commercial thinking, and examples of impact.</span><b>Choose Sales &amp; Marketing →</b></button>
+          <button type="button" class="pathway-card" data-pathway="government"><span class="pathway-icon">▤</span><span class="pathway-kicker">EXAM PATHWAY 03</span><strong>Government Exam</strong><span>For candidates preparing for government recruitment interviews and related selection stages. Add your exam context, then practise presenting your knowledge, motivation, and perspective with clarity.</span><b>Choose Government Exam →</b></button>
         </div>
         <button id="backToWelcome" class="text-btn" type="button">← Back</button>
       </section>
@@ -137,6 +158,7 @@
 
       <section id="interview" class="screen interview-screen hidden">
         <div class="interview-welcome" id="interviewWelcome" aria-live="polite">Hello, let’s get started.</div>
+        <div class="session-context"><span class="session-context-icon">✦</span><div><strong>Your practice space</strong><p>This is a rehearsal—not the real interview. Read each question, take a moment to organise your thoughts, and use the session to practise how you would communicate your experience. The current version presents questions on screen; voice recording and automated feedback are planned for a later update.</p></div></div>
         <div class="interview-header">
           <div>
             <div class="eyebrow">BEHAVIORAL INTERVIEW</div>

@@ -23,7 +23,8 @@ const screens = {
   categories: document.getElementById("categories"),
   interview: document.getElementById("interview"),
   complete: document.getElementById("complete"),
-  contact: document.getElementById("contact")
+  contact: document.getElementById("contact"),
+  faq: document.getElementById("faq")
 };
 
 const questions = [
