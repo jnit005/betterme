@@ -7,6 +7,7 @@
   <title>BetterMe AI Interviewer</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="pathways.css">
 </head>
 <body>
   <div class="app">
@@ -64,98 +65,31 @@
       </section>
 
       <section id="landing" class="screen landing-screen hidden">
-        <div class="hero-grid">
-          <div class="hero-copy">
-            <div class="eyebrow">INTERVIEW PRACTICE, REIMAGINED</div>
-            <h1>Meet your<br><em>AI interviewer.</em></h1>
-            <p>
-              Practice realistic behavioral interviews tailored to your experience,
-              role and difficulty level.
-            </p>
-            <button id="startSetup" class="btn btn-primary">
-              Start a free interview <span>→</span>
-            </button>
-            <div class="trust-row">
-              <span>5 questions</span>
-              <span>•</span>
-              <span>Voice-ready</span>
-              <span>•</span>
-              <span>Personalized</span>
-            </div>
-          </div>
-          <div class="hero-visual">
-            <div class="avatar-glow"></div>
-            <div class="avatar-placeholder" aria-label="AI interviewer preview">
-              <div class="avatar-head">
-                <div class="hair"></div>
-                <div class="face">
-                  <div class="eye eye-left"></div>
-                  <div class="eye eye-right"></div>
-                  <div class="brow brow-left"></div>
-                  <div class="brow brow-right"></div>
-                  <div class="nose"></div>
-                  <div class="mouth"></div>
-                </div>
-              </div>
-              <div class="avatar-shoulders"></div>
-            </div>
-            <div class="avatar-caption">
-              <span class="status-dot"></span>
-              Your AI interviewer
-            </div>
-          </div>
+        <div class="welcome-hero">
+          <div class="eyebrow">YOUR NEXT OPPORTUNITY STARTS HERE</div>
+          <h1>Prepare with purpose.<br><em>Perform with confidence.</em></h1>
+          <p>You've studied, built experience and prepared your resume. But when the interview begins, even well-prepared candidates can freeze or struggle to express what they know. BetterMe gives you a place to practise before the moment matters.</p>
+          <p>Build confidence through realistic interview practice, sharpen how you communicate your experience, and take another step towards the career you want.</p>
+          <button id="startSetup" class="btn btn-primary">Start practising <span>→</span></button>
+          <div class="welcome-points"><span>Practice at your pace</span><span>•</span><span>Choose your pathway</span><span>•</span><span>Prepare with intention</span></div>
         </div>
+        <div class="purpose-strip"><div><strong>Practice</strong><span>Get comfortable answering interview questions.</span></div><div><strong>Improve</strong><span>Work on clarity, structure and confidence.</span></div><div><strong>Progress</strong><span>Turn preparation into purposeful action.</span></div></div>
+      </section>
+
+      <section id="categories" class="screen categories-screen hidden">
+        <div class="section-header"><div><div class="eyebrow">CHOOSE YOUR PATHWAY</div><h2>What are you preparing for?</h2><p>Select a pathway to see its dedicated interview setup.</p></div><div class="plan-chip">FREE · 5 QUESTIONS</div></div>
+        <div class="pathway-grid">
+          <button type="button" class="pathway-card" data-pathway="engineering"><span class="pathway-icon">⌘</span><span class="pathway-kicker">CAREER PATHWAY 01</span><strong>Engineering</strong><span>Technical and engineering role interview practice, tailored to your discipline and experience.</span><b>Choose Engineering →</b></button>
+          <button type="button" class="pathway-card" data-pathway="sales"><span class="pathway-icon">↗</span><span class="pathway-kicker">CAREER PATHWAY 02</span><strong>Sales &amp; Marketing</strong><span>Practise customer, commercial, communication and go-to-market interview scenarios.</span><b>Choose Sales &amp; Marketing →</b></button>
+          <button type="button" class="pathway-card" data-pathway="government"><span class="pathway-icon">▤</span><span class="pathway-kicker">EXAM PATHWAY 03</span><strong>Government Exam</strong><span>Prepare for government examination interviews and related selection stages.</span><b>Choose Government Exam →</b></button>
+        </div>
+        <button id="backToWelcome" class="text-btn" type="button">← Back</button>
       </section>
 
       <section id="setup" class="screen setup-screen hidden">
-        <div class="section-header">
-          <div>
-            <div class="eyebrow">BEHAVIORAL INTERVIEW</div>
-            <h2>Tell us about the interview you want to practice.</h2>
-            <p>We'll use these details to personalize your questions.</p>
-          </div>
-          <div class="plan-chip">FREE · 5 QUESTIONS</div>
-        </div>
-        <form id="setupForm" class="setup-card">
-          <div class="form-grid">
-            <label class="field">
-              <span>Target role</span>
-              <input id="role" name="role" type="text" placeholder="e.g. Sales Engineer" required>
-            </label>
-            <label class="field">
-              <span>Domain / area</span>
-              <input id="domain" name="domain" type="text" placeholder="e.g. Cybersecurity" required>
-            </label>
-            <label class="field">
-              <span>Years of experience</span>
-              <select id="experience" name="experience" required>
-                <option value="">Select experience</option>
-                <option>0–2 years</option>
-                <option>3–5 years</option>
-                <option>6–10 years</option>
-                <option>10+ years</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Interview difficulty</span>
-              <select id="difficulty" name="difficulty" required>
-                <option value="">Select difficulty</option>
-                <option>Easy</option>
-                <option selected>Medium</option>
-                <option>Hard</option>
-              </select>
-            </label>
-          </div>
-          <div class="setup-footer">
-            <div class="privacy-note">
-              <span>🔒</span>
-              Your interview information will be used to personalize this session.
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Continue to interview <span>→</span>
-            </button>
-          </div>
-        </form>
+        <div class="section-header"><div><div id="setupEyebrow" class="eyebrow">INTERVIEW SETUP</div><h2 id="setupHeading">Tell us what you're preparing for.</h2><p id="setupDescription">Your answers will help shape this practice session.</p></div><div class="plan-chip">FREE · 5 QUESTIONS</div></div>
+        <form id="setupForm" class="setup-card"><div id="dynamicFields" class="form-grid"></div><div class="setup-footer"><div class="privacy-note"><span>🔒</span>Your information is used to configure this practice session.</div><button type="submit" class="btn btn-primary">Continue to interview <span>→</span></button></div></form>
+        <button id="backToCategories" class="text-btn" type="button">← Change pathway</button>
       </section>
 
       <section id="interview" class="screen interview-screen hidden">

@@ -20,6 +20,7 @@ const screens = {
   auth: document.getElementById("authScreen"),
   landing: document.getElementById("landing"),
   setup: document.getElementById("setup"),
+  categories: document.getElementById("categories"),
   interview: document.getElementById("interview"),
   complete: document.getElementById("complete")
 };
@@ -210,16 +211,76 @@ async function start() {
     }
   });
 
-  document.getElementById("startSetup").addEventListener("click", () => showScreen("setup"));
+  document.getElementById("startSetup").addEventListener("click", () => showScreen("categories"));
+  document.getElementById("backToWelcome").addEventListener("click", () => showScreen("landing"));
+  document.getElementById("backToCategories").addEventListener("click", () => showScreen("categories"));
 
-  document.getElementById("setupForm").addEventListener("submit", (event) => {
+  const pathwayConfigs = {
+    engineering: {
+      title: "Engineering", eyebrow: "ENGINEERING INTERVIEW", description: "Tell us about your engineering specialism and the role you are targeting.",
+      fields: [
+        {id:"role",label:"Engineering discipline",type:"select",required:true,options:["Software Engineer","Quality / Test Engineer","DevOps Engineer","AI / Machine Learning Engineer","Data Engineer","Cloud Engineer","Site Reliability Engineer (SRE)","Cybersecurity Engineer","Network Engineer","Systems Engineer"]},
+        {id:"domain",label:"Technology / domain",type:"text",placeholder:"e.g. Java, cloud infrastructure, data platforms",required:true},
+        {id:"experience",label:"Years of experience",type:"select",required:true,options:["0–2 years","3–5 years","6–10 years","10+ years"]},
+        {id:"difficulty",label:"Interview difficulty",type:"select",required:true,options:["Easy","Medium","Hard"]}
+      ]
+    },
+    sales: {
+      title: "Sales & Marketing", eyebrow: "SALES & MARKETING INTERVIEW", description: "Share your function, market focus and experience so the practice can be framed appropriately.",
+      fields: [
+        {id:"role",label:"Target role",type:"select",required:true,options:["Sales Representative / Account Executive","Business Development Representative","Enterprise Account Executive","Sales Engineer / Solutions Engineer","Sales Manager","Marketing Specialist","Digital Marketing Manager","Product Marketing Manager","Growth Marketing Manager","Marketing Manager"]},
+        {id:"domain",label:"Industry / market",type:"text",placeholder:"e.g. SaaS, cybersecurity, healthcare",required:true},
+        {id:"experience",label:"Years of experience",type:"select",required:true,options:["0–2 years","3–5 years","6–10 years","10+ years"]},
+        {id:"difficulty",label:"Interview difficulty",type:"select",required:true,options:["Easy","Medium","Hard"]},
+        {id:"focus",label:"Primary interview focus",type:"select",required:true,options:["Behavioral and competency","Sales strategy and execution","Customer discovery and solution selling","Marketing strategy and campaigns","Leadership and management"]}
+      ]
+    },
+    government: {
+      title: "Government Exam", eyebrow: "GOVERNMENT EXAM PREPARATION", description: "Select the examination and stage you are preparing for. These details configure the practice session.",
+      fields: [
+        {id:"exam",label:"Exam / recruitment",type:"select",required:true,options:["UPSC Civil Services","State Public Service Commission","SSC examinations","Banking examinations","Railway recruitment","Defence / armed forces selection","Teaching eligibility / recruitment","Other government examination"]},
+        {id:"stage",label:"Preparation stage",type:"select",required:true,options:["Preliminary examination","Mains / written examination","Personality test / interview","Other selection stage"]},
+        {id:"targetRole",label:"Target service / post (if applicable)",type:"text",placeholder:"e.g. IAS, state administrative service, inspector",required:false},
+        {id:"experience",label:"Preparation experience",type:"select",required:true,options:["Just starting","Less than 6 months","6–12 months","1–2 years","More than 2 years"]},
+        {id:"difficulty",label:"Practice difficulty",type:"select",required:true,options:["Easy","Medium","Hard"]},
+        {id:"language",label:"Preferred practice language",type:"select",required:true,options:["English","Hindi"]}
+      ]
+    }
+  };
+
+  function escapeHtml(value) { return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
+  function renderPathwayForm(key) {
+    const config = pathwayConfigs[key];
+    if (!config) return;
+    interviewProfile = { pathway: key };
+    document.getElementById("setupEyebrow").textContent = config.eyebrow;
+    document.getElementById("setupHeading").textContent = `${config.title}: personalise your practice`;
+    document.getElementById("setupDescription").textContent = config.description;
+    document.getElementById("dynamicFields").innerHTML = config.fields.map(field => {
+      const label = `<span>${escapeHtml(field.label)}</span>`;
+      if (field.type === "select") {
+        const opts = field.options.map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("");
+        return `<label class="field">${label}<select id="${field.id}" name="${field.id}" ${field.required ? "required" : ""}><option value="">Select ${escapeHtml(field.label.toLowerCase())}</option>${opts}</select></label>`;
+      }
+      return `<label class="field">${label}<input id="${field.id}" name="${field.id}" type="text" placeholder="${escapeHtml(field.placeholder || "")}" ${field.required ? "required" : ""}></label>`;
+    }).join("");
+    showScreen("setup");
+  }
+
+  document.querySelectorAll("[data-pathway]").forEach(button => {
+    button.addEventListener("click", () => renderPathwayForm(button.dataset.pathway));
+  });
+
+  document.getElementById("setupForm").addEventListener("submit", event => {
     event.preventDefault();
-    interviewProfile = {
-      role: document.getElementById("role").value.trim(),
-      domain: document.getElementById("domain").value.trim(),
-      experience: document.getElementById("experience").value,
-      difficulty: document.getElementById("difficulty").value
-    };
+    const config = pathwayConfigs[interviewProfile.pathway];
+    if (!config) return;
+    const values = {};
+    config.fields.forEach(field => {
+      const element = document.getElementById(field.id);
+      values[field.id] = element ? element.value.trim() : "";
+    });
+    interviewProfile = { ...interviewProfile, ...values };
     currentQuestion = 0;
     renderQuestion();
     showScreen("interview");
@@ -250,6 +311,8 @@ async function start() {
 
 function renderQuestion() {
   const number = currentQuestion + 1;
+  const labels = { engineering: "ENGINEERING INTERVIEW", sales: "SALES & MARKETING INTERVIEW", government: "GOVERNMENT EXAM PRACTICE" };
+  document.querySelector("#interview .eyebrow").textContent = labels[interviewProfile.pathway] || "INTERVIEW PRACTICE";
   document.getElementById("questionNumber").textContent = `Question ${number} of ${questions.length}`;
   document.getElementById("progressFill").style.width = `${(number / questions.length) * 100}%`;
   document.getElementById("questionText").textContent = questions[currentQuestion];
