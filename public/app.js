@@ -22,7 +22,8 @@ const screens = {
   setup: document.getElementById("setup"),
   categories: document.getElementById("categories"),
   interview: document.getElementById("interview"),
-  complete: document.getElementById("complete")
+  complete: document.getElementById("complete"),
+  contact: document.getElementById("contact")
 };
 
 const questions = [
@@ -35,6 +36,7 @@ const questions = [
 
 let currentQuestion = 0;
 let interviewProfile = {};
+let pendingInterview = false;
 let authMode = "signin";
 let auth;
 let db;
@@ -204,13 +206,32 @@ async function start() {
       userEmail.textContent = user.email || "Signed in";
       document.getElementById("accountGreeting").textContent = firstNameValue || fallbackFirstName ? `Hi, ${firstNameValue || fallbackFirstName}` : "Signed in";
       accountControls.classList.remove("hidden");
+      document.getElementById("loginTopBtn").classList.add("hidden");
       showScreen("landing");
+      if (pendingInterview) {
+        pendingInterview = false;
+        currentQuestion = 0;
+        renderQuestion();
+        showScreen("interview");
+      }
     } else {
       accountControls.classList.add("hidden");
-      showScreen("auth");
+      document.getElementById("loginTopBtn").classList.remove("hidden");
+      showScreen("landing");
     }
   });
 
+  document.getElementById("loginTopBtn").addEventListener("click", () => {
+    setAuthMode("signin");
+    showScreen("auth");
+  });
+  document.querySelectorAll("[data-view]").forEach(button => {
+    button.addEventListener("click", () => {
+      const view = button.dataset.view;
+      if (screens[view]) showScreen(view);
+      document.querySelectorAll("[data-view]").forEach(item => item.classList.toggle("active", item === button));
+    });
+  });
   document.getElementById("startSetup").addEventListener("click", () => showScreen("categories"));
   document.getElementById("backToWelcome").addEventListener("click", () => showScreen("landing"));
   document.getElementById("backToCategories").addEventListener("click", () => showScreen("categories"));
@@ -282,6 +303,13 @@ async function start() {
     });
     interviewProfile = { ...interviewProfile, ...values };
     currentQuestion = 0;
+    if (!auth.currentUser) {
+      pendingInterview = true;
+      setAuthMode("signin");
+      showScreen("auth");
+      setAuthMessage("Please sign in or create an account to launch your interview.", false);
+      return;
+    }
     renderQuestion();
     showScreen("interview");
   });
@@ -304,6 +332,11 @@ async function start() {
   document.getElementById("newInterview").addEventListener("click", () => {
     document.getElementById("setupForm").reset();
     showScreen("setup");
+  });
+
+  document.getElementById("contactForm").addEventListener("submit", event => {
+    event.preventDefault();
+    document.getElementById("contactFeedback").textContent = "Thanks for your message. Contact submission is not connected yet, so nothing has been sent.";
   });
 
   setAuthMode("signin");

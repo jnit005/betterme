@@ -16,7 +16,13 @@
         <span class="logo-mark">B</span>
         <span>better<span>me</span></span>
       </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button type="button" class="nav-link active" data-view="landing">About</button>
+        <button type="button" class="nav-link" data-view="categories">Interview</button>
+        <button type="button" class="nav-link" data-view="contact">Contact Us</button>
+      </nav>
       <div class="topbar-right">
+        <button id="loginTopBtn" class="login-top-btn" type="button">Log in <span>→</span></button>
         <div class="topbar-label">AI INTERVIEWER</div>
         <div id="accountControls" class="account-controls hidden">
           <span id="accountGreeting" class="account-greeting">Hi</span>
@@ -27,7 +33,23 @@
     </header>
 
     <main>
-      <section id="authScreen" class="screen auth-screen">
+      <section id="contact" class="screen contact-screen hidden">
+        <div class="contact-shell">
+          <div class="eyebrow">CONTACT BETTERME</div>
+          <h1>Let’s start a conversation.</h1>
+          <p>Questions, feedback, or partnership enquiries? Send us a message.</p>
+          <form id="contactForm" class="contact-form">
+            <label class="field"><span>Full name</span><input id="contactName" type="text" autocomplete="name" placeholder="Your name" required></label>
+            <label class="field"><span>Email address</span><input id="contactEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+            <label class="field"><span>Subject</span><select id="contactSubject" required><option value="">Choose a subject</option><option>General enquiry</option><option>Product feedback</option><option>Partnership</option><option>Technical support</option></select></label>
+            <label class="field"><span>Message</span><textarea id="contactMessage" rows="5" placeholder="How can we help?" required></textarea></label>
+            <button class="btn btn-primary" type="submit">Send message <span>→</span></button>
+            <p id="contactFeedback" class="contact-feedback" role="status">Contact submission is not connected yet. Submitting this form will not send a message.</p>
+          </form>
+        </div>
+      </section>
+
+      <section id="authScreen" class="screen auth-screen hidden">
         <div class="auth-card">
           <div class="eyebrow">WELCOME TO BETTERME</div>
           <h1 id="authTitle">Sign in to BetterMe</h1>
@@ -64,7 +86,7 @@
         </div>
       </section>
 
-      <section id="landing" class="screen landing-screen hidden">
+      <section id="landing" class="screen landing-screen">
         <div class="welcome-hero">
           <div class="eyebrow">YOUR NEXT OPPORTUNITY STARTS HERE</div>
           <h1>Prepare with purpose.<br><em>Perform with confidence.</em></h1>

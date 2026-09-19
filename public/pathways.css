@@ -18,3 +18,19 @@
 .pathway-card b{margin-top:auto;color:var(--accent);font-size:12px}
 #backToWelcome,#backToCategories{margin:4px 0 24px}
 @media(max-width:800px){.pathway-grid{grid-template-columns:1fr}.pathway-card{min-height:220px}.purpose-strip{grid-template-columns:1fr}.welcome-hero{margin-top:20px;padding:28px 22px}.welcome-hero h1{letter-spacing:-1.6px}}
+
+/* Professional site navigation and supporting pages */
+.main-nav{display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:22px}
+.nav-link{border:0;background:transparent;color:#596579;font:600 14px/1.2 inherit;padding:11px 14px;border-radius:9px;cursor:pointer;transition:background .2s,color .2s}
+.nav-link:hover,.nav-link.active{background:#edf2ff;color:#294fbe}
+.login-top-btn{border:1px solid #d8dfeb;background:#fff;color:#17243b;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;white-space:nowrap}
+.login-top-btn:hover{border-color:#8198d9;background:#f7f9ff}
+.contact-screen{padding:56px 22px 80px}
+.contact-shell{max-width:760px;margin:0 auto;background:#fff;border:1px solid #e4e9f2;border-radius:24px;padding:clamp(26px,5vw,54px);box-shadow:0 24px 70px rgba(22,42,82,.08)}
+.contact-shell h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-1.5px;margin:12px 0}
+.contact-shell>p{color:#637087;font-size:17px;line-height:1.65;margin-bottom:28px}
+.contact-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.contact-form label:nth-child(3),.contact-form label:nth-child(4),.contact-form button,.contact-feedback{grid-column:1/-1}
+.contact-form textarea{resize:vertical;min-height:130px}
+.contact-feedback{margin:0;color:#68758b;font-size:13px;line-height:1.5}
+@media(max-width:720px){.topbar{flex-wrap:wrap;gap:10px}.main-nav{order:3;width:100%;justify-content:center;margin:0;gap:2px}.topbar-right{margin-left:auto}.contact-form{grid-template-columns:1fr}.contact-form label,.contact-form button,.contact-feedback{grid-column:1}}
