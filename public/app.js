@@ -5,8 +5,16 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const screens = {
   auth: document.getElementById("authScreen"),
@@ -28,10 +36,14 @@ let currentQuestion = 0;
 let interviewProfile = {};
 let authMode = "signin";
 let auth;
+let db;
 
 const authForm = document.getElementById("authForm");
 const authEmail = document.getElementById("authEmail");
 const authPassword = document.getElementById("authPassword");
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const nameFields = document.getElementById("nameFields");
 const authTitle = document.getElementById("authTitle");
 const authSubtitle = document.getElementById("authSubtitle");
 const authSubmit = document.getElementById("authSubmit");
@@ -66,6 +78,9 @@ function setAuthMode(mode) {
   authSwitchText.textContent = signIn ? "Don't have an account?" : "Already have an account?";
   authSwitch.textContent = signIn ? "Create one" : "Sign in";
   forgotPassword.classList.toggle("hidden", !signIn);
+  nameFields.classList.toggle("hidden", signIn);
+  firstName.required = !signIn;
+  lastName.required = !signIn;
   authPassword.setAttribute("autocomplete", signIn ? "current-password" : "new-password");
   setAuthMessage("");
 }
@@ -95,6 +110,7 @@ async function start() {
   const firebaseConfig = await response.json();
   const app = initializeApp(firebaseConfig);
   auth = getAuth(app);
+  db = getFirestore(app);
 
   authSwitch.addEventListener("click", () => {
     setAuthMode(authMode === "signin" ? "signup" : "signin");
@@ -104,9 +120,16 @@ async function start() {
     event.preventDefault();
     const email = authEmail.value.trim();
     const password = authPassword.value;
+    const givenName = firstName.value.trim();
+    const familyName = lastName.value.trim();
 
     if (!email || password.length < 6) {
       setAuthMessage("Enter a valid email and a password of at least 6 characters.");
+      return;
+    }
+
+    if (authMode === "signup" && (!givenName || !familyName)) {
+      setAuthMessage("Enter your first and last name.");
       return;
     }
 
@@ -118,7 +141,19 @@ async function start() {
       if (authMode === "signin") {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = credential.user;
+        const displayName = `${givenName} ${familyName}`.trim();
+
+        await updateProfile(user, { displayName });
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: givenName,
+          lastName: familyName,
+          displayName,
+          email: user.email,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
       }
       authForm.reset();
     } catch (error) {
@@ -151,9 +186,22 @@ async function start() {
     await signOut(auth);
   });
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
+      let firstNameValue = "";
+      try {
+        const profileSnap = await getDoc(doc(db, "users", user.uid));
+        if (profileSnap.exists()) {
+          firstNameValue = profileSnap.data().firstName || "";
+        }
+      } catch (error) {
+        console.error("Profile read error:", error);
+      }
+
+      const displayName = user.displayName || "";
+      const fallbackFirstName = displayName.split(" ")[0] || "";
       userEmail.textContent = user.email || "Signed in";
+      document.getElementById("accountGreeting").textContent = firstNameValue || fallbackFirstName ? `Hi, ${firstNameValue || fallbackFirstName}` : "Signed in";
       accountControls.classList.remove("hidden");
       showScreen("landing");
     } else {

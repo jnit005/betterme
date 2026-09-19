@@ -18,6 +18,7 @@
       <div class="topbar-right">
         <div class="topbar-label">AI INTERVIEWER</div>
         <div id="accountControls" class="account-controls hidden">
+          <span id="accountGreeting" class="account-greeting">Hi</span>
           <span id="userEmail" class="user-email"></span>
           <button id="logoutBtn" class="logout-btn" type="button">Log out</button>
         </div>
@@ -32,6 +33,16 @@
           <p id="authSubtitle">Your interview practice sessions will be linked to your account.</p>
 
           <form id="authForm" class="auth-form">
+            <div id="nameFields" class="name-fields hidden">
+              <label class="field">
+                <span>First name</span>
+                <input id="firstName" type="text" autocomplete="given-name" placeholder="First name">
+              </label>
+              <label class="field">
+                <span>Last name</span>
+                <input id="lastName" type="text" autocomplete="family-name" placeholder="Last name">
+              </label>
+            </div>
             <label class="field">
               <span>Email address</span>
               <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
