@@ -12,12 +12,12 @@
 <body>
   <div class="app">
     <header class="topbar">
-      <a class="logo" href="#" aria-label="BetterMe home">
+      <a class="logo" href="#" id="homeLogo" aria-label="BetterMe home">
         <span class="logo-mark">B</span>
         <span>better<span>me</span></span>
       </a>
       <nav class="main-nav" aria-label="Main navigation">
-        <button type="button" class="nav-link active" data-view="landing">About</button>
+        <button type="button" class="nav-link active" data-view="landing">Home</button>
         <button type="button" class="nav-link" data-view="categories">Interview</button>
         <button type="button" class="nav-link" data-view="contact">Contact Us</button>
       </nav>
@@ -136,6 +136,7 @@
       </section>
 
       <section id="interview" class="screen interview-screen hidden">
+        <div class="interview-welcome" id="interviewWelcome" aria-live="polite">Hello, let’s get started.</div>
         <div class="interview-header">
           <div>
             <div class="eyebrow">BEHAVIORAL INTERVIEW</div>

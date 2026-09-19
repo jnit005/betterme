@@ -37,6 +37,7 @@ const questions = [
 let currentQuestion = 0;
 let interviewProfile = {};
 let pendingInterview = false;
+let activeUserFirstName = "";
 let authMode = "signin";
 let auth;
 let db;
@@ -203,6 +204,7 @@ async function start() {
 
       const displayName = user.displayName || "";
       const fallbackFirstName = displayName.split(" ")[0] || "";
+      activeUserFirstName = firstNameValue || fallbackFirstName;
       userEmail.textContent = user.email || "Signed in";
       document.getElementById("accountGreeting").textContent = firstNameValue || fallbackFirstName ? `Hi, ${firstNameValue || fallbackFirstName}` : "Signed in";
       accountControls.classList.remove("hidden");
@@ -221,6 +223,11 @@ async function start() {
     }
   });
 
+  document.getElementById("homeLogo").addEventListener("click", event => {
+    event.preventDefault();
+    showScreen("landing");
+    document.querySelectorAll("[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === "landing"));
+  });
   document.getElementById("loginTopBtn").addEventListener("click", () => {
     setAuthMode("signin");
     showScreen("auth");
@@ -344,6 +351,9 @@ async function start() {
 
 function renderQuestion() {
   const number = currentQuestion + 1;
+  document.getElementById("interviewWelcome").textContent = activeUserFirstName
+    ? `Hello ${activeUserFirstName}, let’s get started.`
+    : "Hello, let’s get started.";
   const labels = { engineering: "ENGINEERING INTERVIEW", sales: "SALES & MARKETING INTERVIEW", government: "GOVERNMENT EXAM PRACTICE" };
   document.querySelector("#interview .eyebrow").textContent = labels[interviewProfile.pathway] || "INTERVIEW PRACTICE";
   document.getElementById("questionNumber").textContent = `Question ${number} of ${questions.length}`;
